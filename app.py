@@ -93,7 +93,7 @@ with col_lateral:
 with col_principal:
     st.title("🍰 ThalitaGourmet")
     st.markdown(
-        "*Doce, artesanal e feito para você!*"
+                "*Doce, artesanal e feito para você!*"
     )
     st.markdown("---")
 
