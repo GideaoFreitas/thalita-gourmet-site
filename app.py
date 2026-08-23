@@ -93,7 +93,7 @@ with col_lateral:
 with col_principal:
     st.title("🍰 ThalitaGourmet")
     st.markdown(
-        "*Confeitaria artesanal de fatias gourmet. Escolha suas delícias abaixo!*"
+        "*Doce, artesanal e feito para você!*"
     )
     st.markdown("---")
 
@@ -106,7 +106,6 @@ with col_principal:
     bairro_selecao = st.selectbox(
         "Bairro de Entrega:",
         [
-            "Valentina (Frete Grátis)",
             "Colinas do Sul (Frete Grátis)",
             "Planalto da Boa Esperança (Frete Grátis)",
             "Novo milênio (Frete Grátis)",
