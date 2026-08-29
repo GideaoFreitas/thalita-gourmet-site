@@ -112,7 +112,7 @@ with col_lateral:
     st.markdown("### 👩‍🍳 Feito com Amor")
     st.write(
         "Olá! Sou a **Thalita**, criadora de cada sabor irresistível que você vai provar hoje. "
-        "Peça o seu e sinta o carinho em cada fatia!"
+        "Peça o seu e sinta o carinho em cada opção!"
     )
     try:
         st.image("dona_thalita.jpg", use_container_width=True)
@@ -121,7 +121,7 @@ with col_lateral:
 
 with col_principal:
     st.title("🍰 ThalitaGourmet")
-    st.markdown("*Confeitaria artesanal de fatias gourmet. Escolha suas delícias abaixo!*")
+    st.markdown("*Confeitaria artesanal de delícias gourmet. Escolha suas opções abaixo!*")
     st.markdown("---")
 
     # 1. Coleta de dados do cliente
@@ -137,7 +137,7 @@ with col_principal:
             "Colinas do Sul (Frete Grátis)",
             "Planalto da Boa Esperança (Frete Grátis)",
             "Novo milênio (Frete Grátis)",
-            "Outros (R$ 5,00 ou FRETE GRÁTIS a partir de 3 fatias)",
+            "Outros (R$ 5,00 ou FRETE GRÁTIS a partir de 3 itens)",
         ],
     )
 
@@ -148,23 +148,32 @@ with col_principal:
     else:
         bairro_final = bairro_selecao.replace(" (Frete Grátis)", "")
 
-    # 2. Cardápio com Fotos
-    st.subheader("2. Cardápio de Fatias")
+    # 2. Cardápio de Produtos
+    st.subheader("2. Cardápio")
     cardapio = {
+        "Pratinho de festa": {
+            "preco": 20.00,  # Você pode alterar o preço aqui se desejar
+            "img": "pratinho_festa.jpg",
+            "desc": "Vem 5 salgados, 2 docinhos e 1 fatia de bolo.",
+            "disponivel": True,
+        },
         "Fatia de prestígio": {
             "preco": 10.00,
             "img": "fatia_prestigio.jpg",
-            "desc": "Massa molhadinha com recheio cremoso de coco e cobertura especial, 200G."
+            "desc": "Massa molhadinha com recheio cremoso de coco e cobertura especial, 200G.",
+            "disponivel": False,
         },
         "Fatia de dois amores": {
             "preco": 12.00,
             "img": "fatia_dois_amores.jpg",
-            "desc": "A perfeita combinação de brigadeiro branco cremoso e brigadeiro tradicional, 200G."
+            "desc": "A perfeita combinação de brigadeiro branco cremoso e brigadeiro tradicional, 200G.",
+            "disponivel": False,
         },
         "Fatia de ninho com nutella": {
             "preco": 15.00,
             "img": "fatia_ninho.jpg",
-            "desc": "Leite Ninho cremoso finalizado com generosas camadas de Nutella original, 200G."
+            "desc": "Leite Ninho cremoso finalizado com generosas camadas de Nutella original, 200G.",
+            "disponivel": False,
         },
     }
 
@@ -173,6 +182,7 @@ with col_principal:
     for item, dados in cardapio.items():
         st.markdown("---")  
         col_img, col_info, col_qtd = st.columns([1.2, 2, 1])
+        disponivel = dados.get("disponivel", True)
 
         with col_img:
             try:
@@ -185,14 +195,22 @@ with col_principal:
             st.markdown(f"### {item}")
             st.write(dados["desc"])
             st.markdown(f"**Preço: R$ {dados['preco']:.2f}**")
+            if not disponivel:
+                st.warning("⚠️ Indisponível no momento")
 
         with col_qtd:
             st.markdown("<br>", unsafe_allow_html=True)
-            qtd = st.number_input(
-                "Qtd", min_value=0, max_value=20, value=0, step=1, key=item
-            )
+            if disponivel:
+                qtd = st.number_input(
+                    "Qtd", min_value=0, max_value=20, value=0, step=1, key=item
+                )
+            else:
+                st.number_input(
+                    "Qtd", min_value=0, max_value=0, value=0, disabled=True, key=item
+                )
+                qtd = 0
 
-        if qtd > 0:
+        if disponivel and qtd > 0:
             carrinho.append(
                 {
                     "item": item,
@@ -219,13 +237,13 @@ with col_principal:
         elif bairro_selecao.startswith("Outros") and not bairro_outro:
             st.error("Por favor, digite o nome do seu bairro no campo indicado!")
         elif not carrinho:
-            st.error("Seu carrinho está vazio! Escolha ao menos um produto.")
+            st.error("Seu carrinho está vazio! Escolha ao menos um produto disponível.")
         else:
-            total_fatias = sum(item["quantidade"] for item in carrinho)
+            total_itens = sum(item["quantidade"] for item in carrinho)
 
             # Regra de Frete para "Outros"
             if bairro_selecao.startswith("Outros"):
-                taxa_entrega = 0.0 if total_fatias >= 3 else 5.0
+                taxa_entrega = 0.0 if total_itens >= 3 else 5.0
             else:
                 taxa_entrega = 0.0
 
@@ -250,8 +268,8 @@ with col_principal:
                     f"= R$ {item['subtotal']:.2f}\n"
                 )
 
-            if taxa_entrega == 0.0 and bairro_selecao.startswith("Outros") and total_fatias >= 3:
-                relatorio += "\n*Taxa de Entrega:* R$ 0,00 (Promoção 3+ fatias grátis! 🎉)"
+            if taxa_entrega == 0.0 and bairro_selecao.startswith("Outros") and total_itens >= 3:
+                relatorio += "\n*Taxa de Entrega:* R$ 0,00 (Promoção 3+ itens grátis! 🎉)"
             else:
                 relatorio += f"\n*Taxa de Entrega:* R$ {taxa_entrega:.2f}"
 
