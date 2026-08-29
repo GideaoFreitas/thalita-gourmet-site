@@ -152,7 +152,7 @@ with col_principal:
     st.subheader("2. Cardápio")
     cardapio = {
         "Pratinho de festa": {
-            "preco": 20.00,  # Você pode alterar o preço aqui se desejar
+            "preco": 15,00,  # Você pode alterar o preço aqui se desejar
             "img": "pratinho_festa.jpg",
             "desc": "Vem 5 salgados, 2 docinhos e 1 fatia de bolo.",
             "disponivel": True,
